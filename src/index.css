@@ -1,0 +1,196 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
+
+/* ─── Reset & Base ─────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #fafaf9;
+  --surface: #ffffff;
+  --border: rgba(0, 0, 0, 0.12);
+  --border-hover: rgba(0, 0, 0, 0.3);
+  --text-primary: #111110;
+  --text-muted: #6b6b6b;
+  --text-dim: #aaa;
+  --accent: #111110;
+  --active-bg: #111110;
+  --active-text: #fafaf9;
+  --pill-height: 36px;
+  --radius-pill: 999px;
+  --transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── App Shell ─────────────────────────────────────── */
+#app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+
+h1 {
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin-bottom: 32px;
+}
+
+/* ─── Tab Bar Container ─────────────────────────────── */
+#tab-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  margin-bottom: 40px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  /* subtle fade on right edge */
+  -webkit-mask-image: linear-gradient(to right, #fafaf9 85%, transparent 100%);
+  mask-image: linear-gradient(to right, #fafaf9 85%, transparent 100%);
+}
+
+#tab-bar::-webkit-scrollbar {
+  display: none;
+}
+
+/* ─── Anchor Reset ──────────────────────────────────── */
+#tab-bar a {
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+/* ─── Category Pill Button ──────────────────────────── */
+#tab-bar a > div {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--pill-height);
+  padding: 0 16px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+
+  /* smooth all transitions */
+  transition:
+    background var(--transition),
+    border-color var(--transition),
+    color var(--transition),
+    transform var(--transition),
+    box-shadow var(--transition);
+}
+
+/* shimmer overlay on hover */
+#tab-bar a > div::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(0, 0, 0, 0.03) 50%,
+    transparent 60%
+  );
+  background-size: 200% 100%;
+  background-position: 200% 0;
+  transition: background-position 600ms ease;
+  pointer-events: none;
+}
+
+/* ─── Hover State ───────────────────────────────────── */
+#tab-bar a:hover > div {
+  border-color: var(--border-hover);
+  color: var(--text-primary);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+#tab-bar a:hover > div::before {
+  background-position: -200% 0;
+}
+
+/* ─── Active State ──────────────────────────────────── */
+#tab-bar a > div.active {
+  background: var(--active-bg);
+  border-color: var(--active-bg);
+  color: var(--active-text);
+  font-weight: 500;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.08),
+    0 4px 20px rgba(0, 0, 0, 0.12);
+}
+
+#tab-bar a > div.active::before {
+  display: none;
+}
+
+#tab-bar a:hover > div.active {
+  transform: translateY(-1px);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.12),
+    0 6px 24px rgba(0, 0, 0, 0.16);
+}
+
+/* ─── Focus Visible ─────────────────────────────────── */
+#tab-bar a:focus-visible > div {
+  outline: 2px solid rgba(0, 0, 0, 0.4);
+  outline-offset: 2px;
+}
+
+/* ─── Press Effect ──────────────────────────────────── */
+#tab-bar a:active > div {
+  transform: translateY(0) scale(0.97);
+  transition-duration: 80ms;
+}
+
+/* ─── Staggered entrance animation ─────────────────── */
+@keyframes pill-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#tab-bar a {
+  animation: pill-in 400ms cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+#tab-bar a:nth-child(1) { animation-delay: 0ms; }
+#tab-bar a:nth-child(2) { animation-delay: 60ms; }
+#tab-bar a:nth-child(3) { animation-delay: 120ms; }
+#tab-bar a:nth-child(4) { animation-delay: 180ms; }
+#tab-bar a:nth-child(5) { animation-delay: 240ms; }
+#tab-bar a:nth-child(6) { animation-delay: 300ms; }
+#tab-bar a:nth-child(7) { animation-delay: 360ms; }
+#tab-bar a:nth-child(8) { animation-delay: 420ms; }
+
+/* ─── Content Area ──────────────────────────────────── */
+#content {
+  min-height: 400px;
+}
